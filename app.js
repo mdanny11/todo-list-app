@@ -30,11 +30,26 @@ function addTask(taskTextFromStorage = null, isCompleted = false) {
         taskItem.remove();
         saveTasksToLocalStorage();
       });
+      let editBtn = document.createElement("button");
+editBtn.textContent = "✏️";
+editBtn.classList.add("edit-btn");
+
+// Handle edit
+editBtn.addEventListener("click", function () {
+  const newText = prompt("Edit your task:", taskTextElement.textContent);
+  if (newText !== null && newText.trim() !== "") {
+    taskTextElement.textContent = newText.trim();
+    saveTasksToLocalStorage(); // So it updates in localStorage too
+  }
+});
+
   
       // Append
+
       taskItem.appendChild(checkbox);
       taskItem.appendChild(taskTextElement);
       taskItem.appendChild(deleteBtn);
+      taskItem.appendChild(editBtn);
       document.getElementById("task-list").appendChild(taskItem);
   
       // Save and clear input
@@ -71,5 +86,24 @@ window.onload = function () {
 
   alert("Welcome back! Your saved tasks are loaded. ✅");
 };
+function filterTasks(filter) {
+  let allTasks = document.querySelectorAll("#task-list li");
+
+  allTasks.forEach((task) => {
+    const checkbox = task.querySelector("input[type='checkbox']");
+    const isChecked = checkbox.checked;
+
+    if (filter === "all") {
+      task.style.display = "flex";
+    } else if (filter === "completed" && isChecked) {
+      task.style.display = "flex";
+    } else if (filter === "incomplete" && !isChecked) {
+      task.style.display = "flex";
+    } else {
+      task.style.display = "none";
+    }
+  });
+}
+
   
   
